@@ -12,7 +12,7 @@
 
 import React from 'React';
 
-var {PropTypes} = React;
+var { PropTypes } = React;
 
 /**
  * Component that defines the attributes of table column.
@@ -32,6 +32,12 @@ var FixedDataTableColumn = React.createClass({
      * Controls if the column is fixed when scrolling in the X axis.
      */
     fixed: PropTypes.bool,
+
+    /**
+     * Controls if the column group is fixed at the left or the right of the
+     * table.
+     */
+    fixedPosition: PropTypes.oneOf(['left', 'right']),
 
     /**
      * The header cell for this column.
@@ -178,6 +184,7 @@ var FixedDataTableColumn = React.createClass({
     return {
       allowCellsRecycling: false,
       fixed: false,
+      fixedPosition: 'left'
     };
   },
 

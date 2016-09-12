@@ -57,6 +57,7 @@ class ObjectDataExample extends React.Component {
         <Column
           cell={<ImageCell data={dataList} col="avatar" />}
           fixed={true}
+          fixedPosition="right"
           width={50}
         />
         <Column

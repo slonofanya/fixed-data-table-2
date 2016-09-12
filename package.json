@@ -1,11 +1,11 @@
 {
-  "name": "fixed-data-table-2",
-  "version": "0.7.2",
+  "name": "fixed-data-table-2-sl-fork",
+  "version": "0.0.0",
   "description": "A React table component designed to allow presenting thousands of rows of data.",
   "main": "main.js",
   "peerDependencies": {
-    "react": ">=0.13.0 || ^0.14.0-beta3",
-    "react-dom": ">=0.14.0 || ^0.14.0-beta3"
+    "react": ">=0.13.0 || ^0.14.0-beta3 || ^15.2.1",
+    "react-dom": ">=0.14.0 || ^0.14.0-beta3 || ^15.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^5.0.0",
@@ -57,13 +57,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/schrodinger/fixed-data-table-2.git"
+    "url": "https://github.com/slonofanya/fixed-data-table-2.git"
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/schrodinger/fixed-data-table-2/issues"
+    "url": "https://github.com/slonofanya/fixed-data-table-2/issues"
   },
-  "homepage": "http://schrodinger.github.io/fixed-data-table-2",
+  "homepage": "https://github.com/slonofanya/fixed-data-table-2",
   "tags": [
     "react",
     "table"
@@ -74,5 +74,9 @@
     "table",
     "data-table",
     "fixed-table"
-  ]
+  ],
+  "dependencies": {
+    "react-addons-shallow-compare": "^15.3.1",
+    "react-dom": "^15.3.1"
+  }
 }
