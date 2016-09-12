@@ -1,5 +1,5 @@
 /**
- * FixedDataTable v0.7.2 
+ * FixedDataTable v0.1.1 
  *
  * Copyright Schrodinger, LLC
  * All rights reserved.
@@ -64,6 +64,12 @@
 
 .fixedDataTableCellLayout_lastChild {
   border-width: 0 1px 1px 0;
+}
+
+.fixedDataTableCellLayout_borderLeft {
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-width: 0 1px 0 1px;
 }
 
 .fixedDataTableCellLayout_alignRight {
@@ -227,6 +233,17 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
   border-left-style: solid;
   border-left-width: 1px;
   left: 0;
+  position: absolute;
+  top: 0;
+  width: 0;
+}
+
+.fixedDataTableRowLayout_rightFixedColumnsDivider {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  border-right-style: solid;
+  border-right-width: 1px;
+  right: 0;
   position: absolute;
   top: 0;
   width: 0;

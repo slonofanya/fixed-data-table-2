@@ -1,1 +1,1 @@
-module.exports = require('./internal/FixedDataTableRoot');
+module.exports = require('./src/FixedDataTableRoot');

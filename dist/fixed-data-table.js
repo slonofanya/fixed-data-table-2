@@ -1,5 +1,5 @@
 /**
- * FixedDataTable v0.7.2 
+ * FixedDataTable v0.1.1 
  *
  * Copyright Schrodinger, LLC
  * All rights reserved.
@@ -707,7 +707,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        zIndex: 1,
 	        offsetTop: 0,
 	        scrollLeft: state.scrollX,
+	        maxScrollX: state.maxScrollX,
 	        fixedColumns: state.groupHeaderFixedColumns,
+	        rightFixedColumns: state.groupHeaderRightFixedColumns,
 	        scrollableColumns: state.groupHeaderScrollableColumns,
 	        onColumnResize: this._onColumnResize,
 	        onColumnReorder: onColumnReorder,
@@ -784,8 +786,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        zIndex: 1,
 	        offsetTop: footOffsetTop,
 	        fixedColumns: state.footFixedColumns,
+	        rightFixedColumns: state.footRightFixedColumns,
 	        scrollableColumns: state.footScrollableColumns,
-	        scrollLeft: state.scrollX
+	        scrollLeft: state.scrollX,
+	        maxScrollX: state.maxScrollX
 	      });
 	    }
 
@@ -801,8 +805,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      zIndex: 1,
 	      offsetTop: headerOffsetTop,
 	      scrollLeft: state.scrollX,
+	      maxScrollX: state.maxScrollX,
 	      fixedColumns: state.headFixedColumns,
 	      scrollableColumns: state.headScrollableColumns,
+	      rightFixedColumns: state.headRightFixedColumns,
 	      onColumnResize: this._onColumnResize,
 	      onColumnReorder: onColumnReorder,
 	      onColumnReorderMove: this._onColumnReorderMove,
@@ -863,6 +869,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      firstRowIndex: state.firstRowIndex,
 	      firstRowOffset: state.firstRowOffset,
 	      fixedColumns: state.bodyFixedColumns,
+	      rightFixedColumns: state.bodyRightFixedColumns,
 	      height: state.bodyHeight,
 	      offsetTop: offsetTop,
 	      onRowClick: state.onRowClick,
@@ -875,6 +882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rowGetter: state.rowGetter,
 	      rowHeightGetter: state.rowHeightGetter,
 	      scrollLeft: state.scrollX,
+	      maxScrollX: state.maxScrollX,
 	      scrollableColumns: state.bodyScrollableColumns,
 	      showLastRowBorder: true,
 	      width: state.width,
@@ -888,8 +896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * resizer knob clicked on. It displays the resizer and puts in the correct
 	   * location on the table.
 	   */
-	  _onColumnResize: function _onColumnResize(
-	  /*number*/combinedWidth,
+	  _onColumnResize: function _onColumnResize( /*number*/combinedWidth,
 	  /*number*/leftOffset,
 	  /*number*/cellWidth,
 	  /*?number*/cellMinWidth,
@@ -912,8 +919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    });
 	  },
-	  _onColumnReorder: function _onColumnReorder(
-	  /*string*/columnKey,
+	  _onColumnReorder: function _onColumnReorder( /*string*/columnKey,
 	  /*number*/width,
 	  /*number*/left,
 	  /*object*/event) {
@@ -930,8 +936,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    });
 	  },
-	  _onColumnReorderMove: function _onColumnReorderMove(
-	  /*number*/deltaX) {
+	  _onColumnReorderMove: function _onColumnReorderMove( /*number*/deltaX) {
 	    var reorderingData = this.state.columnReorderingData;
 	    reorderingData.dragDistance = deltaX;
 	    reorderingData.columnBefore = undefined;
@@ -960,8 +965,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      columnReorderingData: reorderingData
 	    });
 	  },
-	  _onColumnReorderEnd: function _onColumnReorderEnd(
-	  /*object*/props,
+	  _onColumnReorderEnd: function _onColumnReorderEnd( /*object*/props,
 	  /*object*/event) {
 
 	    var columnBefore = this.state.columnReorderingData.columnBefore;
@@ -979,7 +983,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var onHorizontalScroll = this.props.onHorizontalScroll;
 	    if (this.state.columnReorderingData.scrollStart !== this.state.scrollX && onHorizontalScroll) {
 	      onHorizontalScroll(this.state.scrollX);
-	    };
+	    }
+	    ;
 	  },
 	  _areColumnSettingsIdentical: function _areColumnSettingsIdentical(oldColumns, newColumns) {
 	    if (oldColumns.length !== newColumns.length) {
@@ -1006,32 +1011,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var columnInfo = {};
 	    if (canReuseColumnSettings) {
 	      columnInfo.bodyFixedColumns = oldState.bodyFixedColumns;
+	      columnInfo.bodyRightFixedColumns = oldState.bodyRightFixedColumns;
 	      columnInfo.bodyScrollableColumns = oldState.bodyScrollableColumns;
 	      columnInfo.headFixedColumns = oldState.headFixedColumns;
+	      columnInfo.headRightFixedColumns = oldState.headRightFixedColumns;
 	      columnInfo.headScrollableColumns = oldState.headScrollableColumns;
 	      columnInfo.footFixedColumns = oldState.footFixedColumns;
+	      columnInfo.footRightFixedColumns = oldState.footRightFixedColumns;
 	      columnInfo.footScrollableColumns = oldState.footScrollableColumns;
 	    } else {
 	      var bodyColumnTypes = this._splitColumnTypes(columns);
 	      columnInfo.bodyFixedColumns = bodyColumnTypes.fixed;
+	      columnInfo.bodyRightFixedColumns = bodyColumnTypes.rightFixed;
 	      columnInfo.bodyScrollableColumns = bodyColumnTypes.scrollable;
 
 	      var headColumnTypes = this._splitColumnTypes(this._selectColumnElement(HEADER, columns));
 	      columnInfo.headFixedColumns = headColumnTypes.fixed;
+	      columnInfo.headRightFixedColumns = headColumnTypes.rightFixed;
 	      columnInfo.headScrollableColumns = headColumnTypes.scrollable;
 
 	      var footColumnTypes = this._splitColumnTypes(this._selectColumnElement(FOOTER, columns));
 	      columnInfo.footFixedColumns = footColumnTypes.fixed;
+	      columnInfo.footRightFixedColumns = footColumnTypes.rightFixed;
 	      columnInfo.footScrollableColumns = footColumnTypes.scrollable;
 	    }
 
 	    if (canReuseColumnGroupSettings) {
 	      columnInfo.groupHeaderFixedColumns = oldState.groupHeaderFixedColumns;
+	      columnInfo.groupHeaderRightFixedColumns = oldState.groupHeaderRightFixedColumns;
 	      columnInfo.groupHeaderScrollableColumns = oldState.groupHeaderScrollableColumns;
 	    } else {
 	      if (columnGroups) {
 	        var groupHeaderColumnTypes = this._splitColumnTypes(this._selectColumnElement(HEADER, columnGroups));
 	        columnInfo.groupHeaderFixedColumns = groupHeaderColumnTypes.fixed;
+	        columnInfo.groupHeaderRightFixedColumns = groupHeaderColumnTypes.rightFixed;
 	        columnInfo.groupHeaderScrollableColumns = groupHeaderColumnTypes.scrollable;
 	      }
 	    }
@@ -1221,16 +1234,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 	  _splitColumnTypes: function _splitColumnTypes( /*array*/columns) /*object*/{
 	    var fixedColumns = [];
+	    var rightFixedColumns = [];
 	    var scrollableColumns = [];
 	    for (var i = 0; i < columns.length; ++i) {
 	      if (columns[i].props.fixed) {
-	        fixedColumns.push(columns[i]);
+	        if (columns[i].props.fixedPosition === 'right') {
+	          rightFixedColumns.push(columns[i]);
+	        } else {
+	          fixedColumns.push(columns[i]);
+	        }
 	      } else {
 	        scrollableColumns.push(columns[i]);
 	      }
 	    }
 	    return {
 	      fixed: fixedColumns,
+	      rightFixed: rightFixedColumns,
 	      scrollable: scrollableColumns
 	    };
 	  },
@@ -1514,7 +1533,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * onWheel should is to be called with two arguments: deltaX and deltaY in
 	   * this order
 	   */
-
 	  function ReactWheelHandler(
 	  /*function*/onWheel,
 	  /*boolean|function*/handleScrollX,
@@ -2351,7 +2369,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * onTouchScroll should is to be called with two arguments: deltaX and deltaY in
 	   * this order
 	   */
-
 	  function ReactTouchHandler(
 	  /*function*/onTouchScroll,
 	  /*boolean|function*/handleScrollX,
@@ -3126,7 +3143,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * onMove is the callback that will be called on every mouse move.
 	   * onMoveEnd is called on mouse up when movement has ended.
 	   */
-
 	  function DOMMouseMoveTracker(
 	  /*function*/onMove,
 	  /*function*/onMoveEnd,
@@ -3902,12 +3918,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    firstRowOffset: PropTypes.number.isRequired,
 	    fixedColumns: PropTypes.array.isRequired,
 	    height: PropTypes.number.isRequired,
+	    maxScrollX: PropTypes.number.isRequired,
 	    offsetTop: PropTypes.number.isRequired,
 	    onRowClick: PropTypes.func,
 	    onRowDoubleClick: PropTypes.func,
 	    onRowMouseDown: PropTypes.func,
 	    onRowMouseEnter: PropTypes.func,
 	    onRowMouseLeave: PropTypes.func,
+	    rightFixedColumns: PropTypes.array.isRequired,
 	    rowClassNameGetter: PropTypes.func,
 	    rowsCount: PropTypes.number.isRequired,
 	    rowHeightGetter: PropTypes.func,
@@ -3994,7 +4012,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scrollLeft: Math.round(props.scrollLeft),
 	        offsetTop: Math.round(rowOffsetTop),
 	        fixedColumns: props.fixedColumns,
+	        rightFixedColumns: props.rightFixedColumns,
 	        scrollableColumns: props.scrollableColumns,
+	        maxScrollX: props.maxScrollX,
 	        onClick: props.onRowClick,
 	        onDoubleClick: props.onRowDoubleClick,
 	        onMouseDown: props.onRowMouseDown,
@@ -4210,7 +4230,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	//   and get it's position back
 	// All operations take amortized log(n) time where n is number of elements in
 	// the set.
-
 	var IntegerBufferSet = function () {
 	  function IntegerBufferSet() {
 	    _classCallCheck(this, IntegerBufferSet);
@@ -4671,6 +4690,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    scrollLeft: PropTypes.number.isRequired,
 
 	    /**
+	     * The max scrollLeft value possible. Used to determine whether to show
+	     * right-fixed column shadow.
+	     */
+	    maxScrollX: PropTypes.number.isRequired,
+
+	    /**
 	     * Width of the row.
 	     */
 	    width: PropTypes.number.isRequired,
@@ -4773,6 +4798,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rowIndex: this.props.index
 	    });
 
+	    var rightFixedColumns;
+	    var rightColumnsShadow;
+	    if (this.props.rightFixedColumns && this.props.rightFixedColumns.length > 0) {
+	      var rightFixedColumnsWidth = this._getColumnsWidth(this.props.rightFixedColumns);
+
+	      rightFixedColumns = _React2.default.createElement(_FixedDataTableCellGroup2.default, {
+	        key: 'right_fixed_cells',
+	        height: this.props.height,
+	        left: 0,
+	        offsetLeft: this.props.width - rightFixedColumnsWidth,
+	        width: rightFixedColumnsWidth,
+	        zIndex: 2,
+	        columns: this.props.rightFixedColumns,
+	        data: this.props.data,
+	        onColumnResize: this.props.onColumnResize,
+	        rowHeight: this.props.height,
+	        rowIndex: this.props.index,
+	        rightFixed: true
+	      });
+	      rightColumnsShadow = this._renderRightColumnsShadow(rightFixedColumnsWidth);
+	    }
+
 	    return _React2.default.createElement(
 	      'div',
 	      {
@@ -4787,8 +4834,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        { className: (0, _cx2.default)('fixedDataTableRowLayout/body') },
 	        fixedColumns,
+	        rightFixedColumns,
 	        scrollableColumns,
-	        columnsShadow
+	        columnsShadow,
+	        rightColumnsShadow
 	      )
 	    );
 	  },
@@ -4809,6 +4858,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	      var style = {
 	        left: left,
+	        height: this.props.height
+	      };
+	      return _React2.default.createElement('div', { className: className, style: style });
+	    }
+	  },
+	  _renderRightColumnsShadow: function _renderRightColumnsShadow( /*number*/right) /*?object*/{
+	    if (right > 0) {
+	      var className = (0, _cx2.default)({
+	        'fixedDataTableRowLayout/rightFixedColumnsDivider': true,
+	        'fixedDataTableRowLayout/columnsShadow': this.props.scrollLeft < this.props.maxScrollX,
+	        'public/fixedDataTableRow/rightFixedColumnsDivider': true,
+	        'public/fixedDataTableRow/rightColumnsShadow': this.props.scrollLeft < this.props.maxScrollX
+	      });
+	      var style = {
+	        right: -this.props.width + right,
 	        height: this.props.height
 	      };
 	      return _React2.default.createElement('div', { className: className, style: style });
@@ -4961,6 +5025,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    onColumnResize: PropTypes.func,
 
+	    rightFixed: PropTypes.bool,
+
 	    onColumnReorder: PropTypes.func,
 	    onColumnReorderMove: PropTypes.func,
 	    onColumnReorderEnd: PropTypes.func,
@@ -4997,7 +5063,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var recycable = columnProps.allowCellsRecycling && !isColumnReordering;
 	      if (!recycable || currentPosition - props.left <= props.width && currentPosition - props.left + columnProps.width >= 0) {
 	        var key = 'cell_' + i;
-	        cells[i] = this._renderCell(props.rowIndex, props.rowHeight, columnProps, currentPosition, key, contentWidth, isColumnReordering);
+	        var borderLeft = props.rightFixed && i === 0;
+	        cells[i] = this._renderCell(props.rowIndex, props.rowHeight, columnProps, currentPosition, key, borderLeft, contentWidth, isColumnReordering);
 	      }
 	      currentPosition += columnProps.width;
 	    }
@@ -5023,6 +5090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /*object*/columnProps,
 	  /*number*/left,
 	  /*string*/key,
+	  /*bool*/borderLeft,
 	  /*number*/columnGroupWidth,
 	  /*boolean*/isColumnReordering) /*object*/{
 
@@ -5051,6 +5119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      columnKey: columnProps.columnKey,
 	      width: columnProps.width,
 	      left: left,
+	      borderLeft: borderLeft,
 	      cell: columnProps.cell,
 	      columnGroupWidth: columnGroupWidth
 	    });
@@ -5424,6 +5493,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    fixed: PropTypes.bool,
 
 	    /**
+	     * Controls if the column group is fixed at the left or the right of the
+	     * table.
+	     */
+	    fixedPosition: PropTypes.oneOf(['left', 'right']),
+
+	    /**
 	     * The header cell for this column.
 	     * This can either be a string a React element, or a function that generates
 	     * a React Element. Passing in a string will render a default header cell
@@ -5555,7 +5630,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  getDefaultProps: function getDefaultProps() /*object*/{
 	    return {
 	      allowCellsRecycling: false,
-	      fixed: false
+	      fixed: false,
+	      fixedPosition: 'left'
 	    };
 	  },
 	  render: function render() {
@@ -5670,7 +5746,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * The left offset in pixels of the cell.
 	     */
-	    left: PropTypes.number
+	    left: PropTypes.number,
+
+	    /**
+	     * Controls whether or not to render left border
+	     */
+	    borderLeft: PropTypes.bool
 	  },
 
 	  getInitialState: function getInitialState() {
@@ -5782,6 +5863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var className = (0, _joinClasses2.default)((0, _cx2.default)({
 	      'fixedDataTableCellLayout/main': true,
 	      'fixedDataTableCellLayout/lastChild': props.lastChild,
+	      'fixedDataTableCellLayout/borderLeft': props.borderLeft,
 	      'fixedDataTableCellLayout/alignRight': props.align === 'right',
 	      'fixedDataTableCellLayout/alignCenter': props.align === 'center',
 	      'public/fixedDataTableCell/alignRight': props.align === 'right',
